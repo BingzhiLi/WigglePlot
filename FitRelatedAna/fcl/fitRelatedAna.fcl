@@ -1,0 +1,27 @@
+process_name: "WiggleFitAna"
+
+source : 
+{
+  maxEvents   : -1
+  module_type : "RootInput"
+}
+
+services : 
+{
+   TFileService : {
+      fileName : "gm2_wiggle_fit_related_ana.root"
+   }
+}
+
+physics : 
+{
+  analyzers : {
+    WiggleFitAna : {
+       module_type           : FitAna
+       nCalos                : 27
+    }
+  } 
+
+  path      : [ WiggleFitAna ]
+  end_paths : [ path ]
+}
