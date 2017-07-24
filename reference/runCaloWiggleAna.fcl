@@ -1,0 +1,61 @@
+# fhicl file for making the calorimeter nearline plots
+#
+# In order for this fhicl to work the input root file
+# should contain calorimeter unpacking, calibration, and
+# reconstruction data objects
+#
+######################################################################
+	
+process_name: "nearline"
+
+source : 
+{
+  maxEvents   : -1
+  module_type : "RootInput"
+}
+
+
+services : 
+{
+   message: {
+      debugModules : ["*"]
+      suppressInfo : []
+	
+      destinations: {
+         LogToFile: {
+            append    : false
+            filename  : "gm2nearline_ana.log"
+            threshold : "INFO"
+            type      : "file"
+         }
+      }
+   }
+
+   scheduler: {
+      errorOnFailureToPut: false
+   }
+
+   TFileService : {
+      fileName : "gm2nearline_ana.root"
+   }
+}
+
+
+physics : 
+{
+  analyzers : {
+    nearline : {
+       module_type           : CaloNearlineHistograms
+       unpackerModuleLabel   : islandUnpacker
+       unpackerInstanceLabel : unpacker
+       xtalhitModuleLabel    : energyCalibrator
+       xtalhitInstanceLabel  : calibrator
+       clusterModuleLabel    : hitCluster
+       clusterInstanceLabel  : cluster
+       nCalos                : 27
+    }
+  } 
+
+  path      : [ nearline ]
+  end_paths : [ path ]
+}
