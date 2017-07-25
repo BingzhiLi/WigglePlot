@@ -85,7 +85,7 @@ gm2calo::FitAna::FitAna(fhicl::ParameterSet const & p)
 
   caloWiggles_.resize(nCalos_);
   for (int iCalo = 0; iCalo < nCalos_; ++iCalo) {
-    caloWiggles_[iCalo] = allCaloDir.make<TH1D>("wiggle", Form("calo %i T Method; time; N", iCalo + 1), 4700, 0,560000);
+    caloWiggles_[iCalo] = allCaloDir.make<TH1D>(Form("wiggle_%i",iCalo + 1), Form("calo %i T Method; time; N", iCalo + 1), 4700, 0,560000);
   }
 }
 
