@@ -24,7 +24,7 @@ void fitWiggle(){
   hittime->SetMarkerColor(4);
   hittime->SetLineColor(4);
   hittime->SetMarkerSize(0.5);
-  hittime->GetXaxis()->SetRangeUser(0,150);
+  //hittime->GetXaxis()->SetRangeUser(0,150);
   hittime->GetYaxis()->SetRangeUser(1,10000);
   hittime->GetXaxis()->SetTitle("time [#mus]");
   hittime->GetYaxis()->SetTitle(Form("count / %d*149 ns", nRebin));
@@ -123,9 +123,9 @@ void fitWiggle(){
   g4->Draw("AP");   
 
   TH1D *h1 = new TH1D("h1","#gamma#tau_{#mu} likelihood",30,60,90);
-  TH1D *h2 = new TH1D("h2","T_{a} likelihood",10,4.350,4.37);
+  TH1D *h2 = new TH1D("h2","T_{a} likelihood",100,4.3,4.4);
   TH1D *h3 = new TH1D("h3","#gamma#tau_{#mu} Chi2",30,60,90);
-  TH1D *h4 = new TH1D("h4","T_{a} Chi2",10,4.350,4.37);
+  TH1D *h4 = new TH1D("h4","T_{a} Chi2",100,4.3,4.4);
   for(int j=0;j<161;j++){
     h1->Fill(gamma_tau_L[j]);
     h2->Fill(T_a_L[j]);
@@ -134,7 +134,7 @@ void fitWiggle(){
   }
 
   TCanvas *c1[4];
-  gStyle->SetOptStat(0);
+  gStyle->SetOptStat("RM");
   for(int k=0;k<4;k++){
     c1[k]=new TCanvas (Form("c%i",k),"",1200,800);
     if(k==0) h1->Draw();
@@ -143,6 +143,10 @@ void fitWiggle(){
     if(k==3) h4->Draw();
   }
 
+/*  cc1->Print("gammaTau_vs_fitRange_likelihood.png");
+  cc2->Print("Ta_vs_fitRange_likelihood.png");
+  cc3->Print("gammaTau_vs_fitRange_Chi2.png");
+  cc4->Print("Ta_vs _fitRange_chi2.png");*/
   
 
   

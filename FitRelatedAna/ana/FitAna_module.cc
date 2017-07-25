@@ -54,6 +54,9 @@ private:
   int runNumber_;
   int subrunNumber_;
 
+
+
+
   int nCalos_; // calo number
   int nXtals_; // crystal number
   double wiggleThreshold_; // official Energy threshold = 1860MeV * 0.75pe/MeV = 1395
@@ -61,8 +64,25 @@ private:
   std::string clusterModuleLabel_;
   std::string clusterInstanceLabel_;
 
-  TH1D *allWiggle_; // all wiggle plot
-  std::vector<TH1D *> caloWiggles_; // wiggle plots for 24 calos
+  TH1D *allWiggle_; // all wiggle plot with wiggle threshold 1.86GeV
+  std::vector<TH1D *> caloWiggles_; // wiggle plots for 24 calos with wiggle threshold 1.86GeV
+
+  //////////////diff energy threshold 1.6 1.7 1.8 1.9 2.0 2.1 2.2 GeV * 0.75pe/MeV
+  double th16;
+  double th17;
+  double th18;
+  double th19;
+  double th20;
+  double th21;
+  double th22;
+  //////////////diff energy threshold histogram
+  TH1D *threshold16;
+  TH1D *threshold17;
+  TH1D *threshold18;
+  TH1D *threshold19;
+  TH1D *threshold20;
+  TH1D *threshold21;
+  TH1D *threshold22;
 };
 
 
@@ -75,18 +95,34 @@ gm2calo::FitAna::FitAna(fhicl::ParameterSet const & p)
   nXtals_(p.get<int>("nXtals", 54)),
   wiggleThreshold_(p.get<double>("wiggleThreshold", 1400)),
   clusterModuleLabel_(p.get<std::string>("clusterModuleLabel", "hitCluster")),
-  clusterInstanceLabel_(p.get<std::string>("clusterInstanceLabel", "cluster"))
- // More initializers here.
+  clusterInstanceLabel_(p.get<std::string>("clusterInstanceLabel", "cluster")),
+  th16(p.get<double>("th16", 1200)),
+  th17(p.get<double>("th17", 1275)),
+  th18(p.get<double>("th18", 1350)),
+  th19(p.get<double>("th19", 1425)),
+  th20(p.get<double>("th20", 1500)),
+  th21(p.get<double>("th21", 1575)),
+  th22(p.get<double>("th22", 1650))
 {
+
   art::ServiceHandle<art::TFileService> tfs;
   art::TFileDirectory allCaloDir = *tfs;
 
-  allWiggle_ = allCaloDir.make<TH1D>("allCaloWiggle", "T Method, all calos; time [clock ticks]; N;", 4700, 0,560000);
+  allWiggle_ = allCaloDir.make<TH1D>("allCaloWiggle", "T Method with threshold 1.86GeV, all calos; time [clock ticks]; N;", 4700, 0,560000);
 
   caloWiggles_.resize(nCalos_);
   for (int iCalo = 0; iCalo < nCalos_; ++iCalo) {
-    caloWiggles_[iCalo] = allCaloDir.make<TH1D>(Form("wiggle_%i",iCalo + 1), Form("calo %i T Method; time; N", iCalo + 1), 4700, 0,560000);
+    caloWiggles_[iCalo] = allCaloDir.make<TH1D>(Form("wiggle_%i",iCalo + 1), Form("calo %i T Method with threshold 1.86GeV; time [clock ticks]; N", iCalo + 1), 4700, 0,560000);
   }
+
+  threshold16 = allCaloDir.make<TH1D>("wigglethreshold1600MeV","T Method with threshold 1.6GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  threshold17 = allCaloDir.make<TH1D>("wigglethreshold1700MeV","T Method with threshold 1.7GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  threshold18 = allCaloDir.make<TH1D>("wigglethreshold1800MeV","T Method with threshold 1.8GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  threshold19 = allCaloDir.make<TH1D>("wigglethreshold1900MeV","T Method with threshold 1.9GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  threshold20 = allCaloDir.make<TH1D>("wigglethreshold2000MeV","T Method with threshold 2.0GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  threshold21 = allCaloDir.make<TH1D>("wigglethreshold2100MeV","T Method with threshold 2.1GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  threshold22 = allCaloDir.make<TH1D>("wigglethreshold2200MeV","T Method with threshold 2.2GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+
 }
 
 void gm2calo::FitAna::analyze(art::Event const & e)
@@ -111,8 +147,22 @@ void gm2calo::FitAna::analyze(art::Event const & e)
     if (cluster.energy > wiggleThreshold_) {
       allWiggle_->Fill(cluster.time);
       caloWiggles_[caloIndex]->Fill(cluster.time);
-    }    
+    } 
+
+    if (cluster.energy > th16) {threshold16->Fill(cluster.time);}
+    if (cluster.energy > th17) {threshold17->Fill(cluster.time);}
+    if (cluster.energy > th18) {threshold18->Fill(cluster.time);}
+    if (cluster.energy > th19) {threshold19->Fill(cluster.time);}
+    if (cluster.energy > th20) {threshold20->Fill(cluster.time);}
+    if (cluster.energy > th21) {threshold21->Fill(cluster.time);}
+    if (cluster.energy > th22) {threshold22->Fill(cluster.time);}
+    
+
+
+
+
   });
+
 }
 
 DEFINE_ART_MODULE(gm2calo::FitAna)
