@@ -15,7 +15,7 @@ void obtain_parameter(){
     if(k==0) { threshold[k]=1.86; }
     else { threshold[k]=1.5+0.1*k; }
 
-    hittime[k]= new TH1D(Form("hittime_%f",threshold[k]),Form("hittime_%f",threshold[k]),3000,0,binWidth*3000);    
+    hittime[k]= new TH1D(Form("Wiggle_plot_%.2fGeV_%d",threshold[k],k),Form("T-Method wiggle plot with cut %.2fGeV",threshold[k]),3000,0,binWidth*3000);    
   }
 
   TFile *file= new TFile("../run/gm2_wiggle_fit_related_ana.1462.root");
@@ -39,8 +39,6 @@ void obtain_parameter(){
       hittime[j]->SetBinContent(i+1,allhits[j]->GetBinContent(225+i));
     }  
     hittime[j]->ResetStats();
-    hittime[j]->SetTitle("T-method_wiggle_plot_Likelihood_fit");
-    hittime[j]->SetName("T-method Wiggle plot");
     hittime[j]->Rebin(nRebin);
     hittime[j]->SetMarkerStyle(4);
     hittime[j]->SetMarkerColor(4);
