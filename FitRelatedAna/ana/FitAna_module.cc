@@ -90,6 +90,9 @@ private:
   TH1D *slice1618;
   TH1D *slice1820;
   TH1D *slice2022;
+  TH1D *slice1619;
+  TH1D *slice1922;
+  TH1D *slice2231;
   
 };
 
@@ -141,6 +144,10 @@ gm2calo::FitAna::FitAna(fhicl::ParameterSet const & p)
   slice1618 = allCaloDir.make<TH1D>("energy_slice_1600_1800MeV","T Method with energy slice 1.6 to 1.8 GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
   slice1820 = allCaloDir.make<TH1D>("energy_slice_1800_2000MeV","T Method with energy slice 1.8 to 2.0 GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
   slice2022 = allCaloDir.make<TH1D>("energy_slice_2000_2200MeV","T Method with energy slice 2.0 to 2.2 GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+
+  slice1619 = allCaloDir.make<TH1D>("energy_slice_1600_1900MeV","T Method with energy slice 1.6 to 1.9 GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  slice1922 = allCaloDir.make<TH1D>("energy_slice_1900_2200MeV","T Method with energy slice 1.9 to 2.2 GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
+  slice2231 = allCaloDir.make<TH1D>("energy_slice_2200_3100MeV","T Method with energy slice > 2.2 GeV, all calos; time [clock ticks]; N;", 4700, 0, 560000);
 }
 
 void gm2calo::FitAna::analyze(art::Event const & e)
@@ -187,8 +194,12 @@ void gm2calo::FitAna::analyze(art::Event const & e)
     //energy slices 1.6-1.8 1.8-2.0 2.0-2.2
     if (cluster.energy > th16 && cluster.energy < th18) { slice1618->Fill(cluster.time); }
     if (cluster.energy > th18 && cluster.energy < th20) { slice1820->Fill(cluster.time); }
-    if (cluster.energy > th20 && cluster.energy < th22) { slice2022->Fill(cluster.time); }    
+    if (cluster.energy > th20 && cluster.energy < th22) { slice2022->Fill(cluster.time); }  
 
+    //energy slices 1.6-1.9 1.9-2.2 >2.2
+    if (cluster.energy > th16 && cluster.energy < th19) { slice1619->Fill(cluster.time); }
+    if (cluster.energy > th19 && cluster.energy < th22) { slice1922->Fill(cluster.time); }      
+    if (cluster.energy > th22) { slice2231->Fill(cluster.time); }  
   });
 
 }
