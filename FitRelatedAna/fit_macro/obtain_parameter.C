@@ -9,6 +9,7 @@ void obtain_parameter(){
   double threshold[8];
   double Ta_L[8],Ta_C[8],tau_L[8],tau_C[8],N_L[8],N_C[8],phi_L[8],phi_C[8],A_L[8],A_C[8];
   double Ta_L_err[8],Ta_C_err[8],tau_L_err[8],tau_C_err[8],N_L_err[8],N_C_err[8],phi_L_err[8],phi_C_err[8],A_L_err[8],A_C_err[8];
+  double chi2ndf[8];
 
   TH1D *hittime[8];
   for(int k=0;k<8;k++){
@@ -30,7 +31,7 @@ void obtain_parameter(){
   allhits[6] = (TH1D*)file->Get("WiggleFitAna/wigglethreshold2100MeV");
   allhits[7] = (TH1D*)file->Get("WiggleFitAna/wigglethreshold2200MeV");
 
-  TFile *f=new TFile("parameter.root","create");
+  TFile *f=new TFile("parameter25.root","create");
 
   // offset to bin 255 (right after the first splash)
   // convert from clock tick to ns histogram
@@ -75,11 +76,12 @@ void obtain_parameter(){
   fit_parameter->Branch("phi_C_err",&phi_C_err[0],"phi_C_err[8]/D");
   fit_parameter->Branch("A_L_err",&A_L_err[0],"A_L_err[8]/D");
   fit_parameter->Branch("A_C_err",&A_C_err[0],"A_C_err[8]/D");
+  fit_parameter->Branch("chi2ndf",&chi2ndf[0],"chi2ndf[8]/D");  
 
 
   for(int l=0;l<161;l++){
     for(int p=0;p<8;p++){
-      TF1 *fit = new TF1("fit", "[0]*exp(-x/[1])*(1+[2]*cos([3]+2*TMath::Pi()/[4]*x))", 20,l+40);
+      TF1 *fit = new TF1("fit", "[0]*exp(-x/[1])*(1+[2]*cos([3]+2*TMath::Pi()/[4]*x))", 25,l+40);
       fit->SetNpx(50000);
       fit->SetParNames("N","#gamma#tau_{#mu}","A","#phi","T_{a}(#mus)");
       fit->SetParameters(100,64.4,0.5,0,4.3);
@@ -91,7 +93,7 @@ void obtain_parameter(){
 
       tau_L[p] = hittime[p]->Fit("fit","SQREML")->Parameter(1);
       tau_L_err[p] = fit->GetParError(1);
-      tau_C[p] = hittime[p]->Fit("fit","SQREML")->Parameter(1);
+      tau_C[p] = hittime[p]->Fit("fit","SQREM")->Parameter(1);
       tau_C_err[p] = fit->GetParError(1);
 
       N_L[p] = hittime[p]->Fit("fit","SQREML")->Parameter(0);
@@ -101,15 +103,16 @@ void obtain_parameter(){
 
       phi_L[p] = hittime[p]->Fit("fit","SQREML")->Parameter(3);
       phi_L_err[p] = fit->GetParError(3);
-      phi_C[p] = hittime[p]->Fit("fit","SQREML")->Parameter(3);
+      phi_C[p] = hittime[p]->Fit("fit","SQREM")->Parameter(3);
       phi_C_err[p] = fit->GetParError(3);  
    
       A_L[p] = hittime[p]->Fit("fit","SQREML")->Parameter(2);
       A_L_err[p] = fit->GetParError(2);
-      A_C[p] = hittime[p]->Fit("fit","SQREML")->Parameter(2);
+      A_C[p] = hittime[p]->Fit("fit","SQREM")->Parameter(2);
       A_C_err[p] = fit->GetParError(2); 
 
-
+      chi2ndf[p] = ( hittime[p]->Fit("fit","SQREM")->Chi2() ) / ( hittime[p]->Fit("fit","SQREM")->Ndf() );
+      
     }      
     cout<<l<<endl;
 

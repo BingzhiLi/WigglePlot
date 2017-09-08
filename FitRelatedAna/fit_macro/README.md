@@ -18,3 +18,15 @@ macro to fit the wiggle plot
   leaf[6]-2.1 GeV
   leaf[7]-2.2 GeV
 
+3. diff_start_point.C
+
+  obtain the fit parameter in diff fit range with diff fit start point and same threshold 
+  
+  the fit range : 10-40 ... 10-200 ns
+                  20-40 ... 20-200 ns
+                  25-40 ... 25-200 ns
+
+4. FitRelatedAna.C
+  
+  read the tree in the root file which produced by the 2.obtain_parameter.C macro 
+  draw the parameters vs fit range
