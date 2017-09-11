@@ -30,3 +30,17 @@ macro to fit the wiggle plot
   
   read the tree in the root file which produced by the 2.obtain_parameter.C macro 
   draw the parameters vs fit range
+
+5. energy_slice_parameter.C
+
+  like 2.obtain_parameter.C , obtain the fit parameters in diff energy slice with same threshold, and 
+  store them in a tree, each leaf is in array structure, leaf[[i] correspond the i_th energy slice
+
+  leaf[0]-1.6-1.9 GeV
+  leaf[1]-1.9-2.2 GeV
+  leaf[2]-2.2-3.1 GeV
+
+6. energy_slice_Fit.C
+
+  read the tree in the rooot file which produced by the 5.energy_slice_parameter.C macro
+  draw the parameters vs fit range
